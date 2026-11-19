@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Telaé — Bolsas artesanais em tela</title>
+  <meta name="description" content="Bolsas artesanais tecidas à mão em tela por Raquel Júnia. Peças exclusivas, feitas sob encomenda, com envio para todo o Brasil.">
+  <meta property="og:title" content="Telaé — Bolsas artesanais em tela">
+  <meta property="og:description" content="Peças exclusivas feitas à mão, sob encomenda.">
+  <meta property="og:image" content="assets/products/nacar.jpg">
+  <meta name="theme-color" content="#F6F1EA">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/store.css">
+</head>
+<body>
+  <div class="announce" id="announce"></div>
+  <header class="header">
+    <div class="wrap header-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <a href="#/" class="logo" aria-label="Telaé — início">
+        <span class="logo-name">Telaé</span>
+        <span class="logo-sub">bolsas artesanais em tela</span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#/loja">Loja</a>
+        <a href="#/loja?destaques=1">Destaques</a>
+        <a href="#/sobre">Sobre</a>
+        <a href="#/encomendas">Encomendas</a>
+        <a href="#/acompanhar">Meu pedido</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Buscar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <button class="icon-btn cart-btn" id="cartBtn" aria-label="Abrir sacola">
+          <svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="cart-count" id="cartCount" hidden>0</span>
+        </button>
+      </div>
+    </div>
+    <form class="searchbar" id="searchbar" hidden>
+      <div class="wrap"><input type="search" id="searchInput" placeholder="Buscar bolsas, cores, modelos…" aria-label="Buscar"></div>
+    </form>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="footer">
+    <div class="wrap footer-in">
+      <div>
+        <div class="logo-name foot-logo">Telaé</div>
+        <p class="muted" id="footTagline">Bolsas artesanais em tela, feitas à mão por Raquel Júnia.</p>
+      </div>
+      <div>
+        <h4>Loja</h4>
+        <a href="#/loja">Todas as bolsas</a>
+        <a href="#/encomendas">Encomendas personalizadas</a>
+        <a href="#/acompanhar">Acompanhar pedido</a>
+      </div>
+      <div>
+        <h4>Ajuda</h4>
+        <a href="#/sobre">Sobre a Telaé</a>
+        <a href="#/politicas">Prazos, trocas e cuidados</a>
+        <a id="footWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a id="footIg" href="#" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="wrap foot-bottom muted"><span id="footCity"></span> · © <span id="year"></span> Telaé</div>
+  </footer>
+
+  <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 32 32"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.7c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.7 10.7 0 1 1 16 26.7Zm5.9-8c-.3-.2-1.9-1-2.2-1-.3-.1-.5-.2-.7.1l-1 1.2c-.2.2-.4.3-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.6 5.8 5 2.1.9 3 1 4 .8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>
+  </a>
+
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+  <aside class="drawer" id="cartDrawer" aria-label="Sacola" aria-hidden="true">
+    <div class="drawer-head">
+      <h3>Sua sacola</h3>
+      <button class="icon-btn" id="closeCart" aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="drawer-body" id="cartBody"></div>
+    <div class="drawer-foot" id="cartFoot"></div>
+  </aside>
+
+  <script type="module" src="js/store.js"></script>
+</body>
+</html>
