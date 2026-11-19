@@ -1,10 +1,10 @@
 # Telaé — loja virtual
 
-Loja: https://marcoslaine.github.io/telae/
-Painel admin: https://marcoslaine.github.io/telae/admin.html
+Loja: https://telaebolsas.vercel.app/
+Painel admin: https://telaebolsas.vercel.app/admin.html
 
 ## Como funciona
-- **Site estático** (HTML/CSS/JS, sem build) hospedado de graça no GitHub Pages.
+- **Site estático** (HTML/CSS/JS, sem build) hospedado de graça na Vercel (deploy automático a cada push no GitHub).
 - **Supabase** (plano grátis) guarda produtos, categorias, pedidos, cupons e configurações; também faz o login do painel e guarda as fotos enviadas.
 - **Checkout**: a cliente monta a sacola, informa dados e entrega (CEP preenchido automaticamente), escolhe Pix ou cartão por link. O pedido é gravado no painel com preços recalculados no servidor e ela envia o resumo pelo WhatsApp da loja. A página "Meu pedido" mostra o andamento (código + telefone).
 
