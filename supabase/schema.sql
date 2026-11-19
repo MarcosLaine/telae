@@ -196,7 +196,7 @@ begin
   end if;
 
   loop
-    new_code := 'TL' || upper(substr(encode(gen_random_bytes(4), 'hex'), 1, 6));
+    new_code := 'TL' || upper(substr(md5(random()::text || clock_timestamp()::text), 1, 6));
     exit when not exists (select 1 from public.orders where code = new_code);
   end loop;
 

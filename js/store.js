@@ -69,7 +69,7 @@ function card(p) {
   <article class="card">
     <a href="#/produto/${esc(p.slug)}" class="card-img">
       <img src="${esc(img(p.images?.[0]))}" alt="${esc(p.name)}" loading="lazy" width="440" height="550">
-      ${soldOut ? '<span class="badge">Esgotada</span>' : sale ? '<span class="badge sale">Oferta</span>' : p.featured ? '<span class="badge">Destaque</span>' : ''}
+      ${soldOut ? '<span class="badge">Esgotada</span>' : sale ? '<span class="badge sale">Oferta</span>' : ''}
       ${soldOut ? '' : `<button class="btn btn-sm btn-block card-quick" data-add="${p.id}">Adicionar à sacola</button>`}
     </a>
     <a href="#/produto/${esc(p.slug)}" class="card-name">${esc(p.name)}</a>
@@ -85,7 +85,6 @@ function bindCards(root = app) {
     e.preventDefault(); e.stopPropagation();
     const p = products.find((x) => x.id === b.dataset.add);
     cart.add(p.id, 1, p.colors?.[0] || '');
-    toast(`${p.name} foi para a sacola`);
     openCart();
   }));
 }
@@ -281,7 +280,7 @@ function viewProduct(slug) {
   }));
   $('#qMinus').onclick = () => { qty = Math.max(1, qty - 1); $('#qVal').textContent = qty; };
   $('#qPlus').onclick = () => { qty = Math.min(soldOut ? 1 : p.made_to_order ? 20 : p.stock, qty + 1); $('#qVal').textContent = qty; };
-  const add = () => { cart.add(p.id, qty, color); toast(`${p.name} foi para a sacola`); openCart(); };
+  const add = () => { cart.add(p.id, qty, color); openCart(); };
   $('#addBtn').onclick = add;
   bindCards();
 
@@ -634,6 +633,7 @@ async function route() {
   const parts = path.split('/').filter(Boolean);
   removeMobileBar();
   closeNav();
+  document.body.classList.toggle('page-checkout', parts[0] === 'checkout');
   document.title = 'Telaé — Bolsas artesanais em tela';
   $$('.nav a').forEach((a) => a.classList.toggle('active', a.getAttribute('href') === `#${raw}` || (parts[0] && a.getAttribute('href') === `#/${parts[0]}`)));
   switch (parts[0]) {

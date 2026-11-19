@@ -272,7 +272,7 @@ details.acc p { margin: 10px 0 0; color: var(--ink-2); font-size: .95rem; }
   .hero p { font-size: 1rem; }
   .hero-cta .btn { flex: 1; }
   .hero-art { grid-template-columns: 1.4fr 1fr; gap: 10px; }
-  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding: 2px 16px 6px; scroll-snap-type: x proximity; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 2px 0 6px; scroll-snap-type: x proximity; }
   .chips::-webkit-scrollbar { display: none; }
   .chip { scroll-snap-align: start; padding: 10px 16px; }
   .shop-tools { margin: 14px 0 20px; }
@@ -297,6 +297,9 @@ details.acc p { margin: 10px 0 0; color: var(--ink-2); font-size: .95rem; }
   .wa-float { width: 50px; height: 50px; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); }
   body.has-sticky .wa-float { bottom: calc(86px + env(safe-area-inset-bottom)); }
   .mobile-bar { display: flex !important; }
+  .toasts { top: calc(12px + env(safe-area-inset-top)); bottom: auto; }
+  .announce { font-size: .72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  body.page-checkout .wa-float { display: none; }
   .desk-submit, .desk-submit + p { display: none; }
   .input, select.input, textarea.input { font-size: 16px; padding: 13px 14px; }
 }
