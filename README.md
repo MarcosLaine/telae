@@ -6,7 +6,7 @@ Painel admin: https://telaebolsas.vercel.app/admin.html
 ## Como funciona
 - **Site estático** (HTML/CSS/JS, sem build) hospedado de graça na Vercel (deploy automático a cada push no GitHub).
 - **Supabase** (plano grátis) guarda produtos, categorias, pedidos, cupons e configurações; também faz o login do painel e guarda as fotos enviadas.
-- **Checkout**: a cliente monta a sacola, informa dados e entrega (CEP preenchido automaticamente), escolhe Pix ou cartão por link. O pedido é gravado no painel com preços recalculados no servidor e ela envia o resumo pelo WhatsApp da loja. A página "Meu pedido" mostra o andamento (código + telefone).
+- **Compra pelo WhatsApp**: não há carrinho nem pedido no site. Cada bolsa tem o botão "Quero esta", que abre o WhatsApp da loja (+55 37 99198-5435) com a mensagem pronta "Olá! Gostei da Bolsa X" + link da peça. Pagamento e entrega são combinados na conversa.
 
 ## Liberar o primeiro administrador
 1. Abra o painel e clique em **Primeiro acesso? Criar conta** → confirme pelo e-mail recebido.
@@ -14,7 +14,7 @@ Painel admin: https://telaebolsas.vercel.app/admin.html
 3. Recarregue o painel. Daí em diante, novos admins podem ser adicionados pela aba **Admins**.
 
 ## O que dá para alterar no painel
-Pedidos (status, rastreio, notas, avisar cliente no WhatsApp) · Produtos (fotos, preço, oferta, cores, estoque ou sob encomenda, visível, destaque) · Categorias · Cupons · Loja (textos, WhatsApp, Instagram, **chave Pix**, frete fixo, frete grátis) · Admins.
+Produtos (fotos, preço, oferta, cores, sob encomenda ou pronta entrega, visível, destaque) · Categorias · Loja (textos, número do WhatsApp, Instagram, prazo de produção) · Admins.
 
 ## Observações
 - Os preços cadastrados inicialmente são **provisórios** — ajuste no painel.

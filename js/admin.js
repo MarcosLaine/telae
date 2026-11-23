@@ -26,10 +26,8 @@ const ico = (n) => `<svg viewBox="0 0 24 24">${I[n]}</svg>`;
 
 const TABS = [
   { id: 'painel', label: 'Painel', icon: 'home', mobile: true },
-  { id: 'pedidos', label: 'Pedidos', icon: 'bag', mobile: true },
   { id: 'produtos', label: 'Produtos', icon: 'box', mobile: true },
-  { id: 'categorias', label: 'Categorias', icon: 'folder' },
-  { id: 'cupons', label: 'Cupons', icon: 'tag' },
+  { id: 'categorias', label: 'Categorias', icon: 'folder', mobile: true },
   { id: 'config', label: 'Loja', icon: 'gear', mobile: true },
   { id: 'admins', label: 'Admins', icon: 'user' },
   { id: 'mais', label: 'Mais', icon: 'more', mobileOnly: true },
@@ -146,7 +144,7 @@ function shell() {
 
 function go(t) {
   tab = t; history.replaceState(null, '', `#${t}`);
-  $$('.tab').forEach((b) => b.classList.toggle('active', b.dataset.tab === t || (t !== 'mais' && b.dataset.tab === 'mais' && ['categorias', 'cupons', 'admins'].includes(t) && matchMedia('(max-width:860px)').matches)));
+  $$('.tab').forEach((b) => b.classList.toggle('active', b.dataset.tab === t || (t !== 'mais' && b.dataset.tab === 'mais' && ['admins'].includes(t) && matchMedia('(max-width:860px)').matches)));
   const views = { painel: vDash, pedidos: vOrders, produtos: vProducts, categorias: vCats, cupons: vCoupons, config: vSettings, admins: vAdmins, mais: vMore };
   (views[t] || vDash)();
   window.scrollTo(0, 0);
@@ -161,40 +159,27 @@ async function refreshPending() {
 /* ---------------- Painel ---------------- */
 async function vDash() {
   const m = $('#main');
-  m.innerHTML = `<div class="top"><h1>Olá! 👋</h1><a class="btn btn-sm btn-ghost" href="${SITE}" target="_blank" rel="noopener">Ver loja</a></div><div class="loader">Carregando…</div>`;
-  const since = new Date(); since.setDate(1); since.setHours(0, 0, 0, 0);
-  const [o, p] = await Promise.all([
-    sb.from('orders').select('*').order('created_at', { ascending: false }).limit(300),
-    sb.from('products').select('id,active', { count: 'exact' }),
-  ]);
-  const orders = o.data || [];
-  const today = new Date().toDateString();
-  const paid = ['pago', 'em_producao', 'enviado', 'entregue'];
-  const month = orders.filter((x) => new Date(x.created_at) >= since);
-  const revenue = month.filter((x) => paid.includes(x.status)).reduce((a, x) => a + Number(x.total), 0);
-  const waiting = orders.filter((x) => ['novo', 'aguardando_pagamento'].includes(x.status)).length;
-  const prod = orders.filter((x) => x.status === 'em_producao').length;
+  const { data } = await sb.from('products').select('id,name,slug,price,active,featured,images').order('sort');
+  const prods = data || [];
+  const active = prods.filter((p) => p.active);
   m.innerHTML = `
   <div class="top"><h1>Olá! 👋</h1><a class="btn btn-sm btn-ghost" href="${SITE}" target="_blank" rel="noopener">Ver loja</a></div>
   <div class="stats">
-    <div class="stat"><span>Vendas pagas no mês</span><b>${money(revenue)}</b></div>
-    <div class="stat"><span>Aguardando pagamento</span><b>${waiting}</b></div>
-    <div class="stat"><span>Em produção</span><b>${prod}</b></div>
-    <div class="stat"><span>Pedidos hoje</span><b>${orders.filter((x) => new Date(x.created_at).toDateString() === today).length}</b></div>
-  </div>
-  <div class="box">
-    <div class="top" style="margin-bottom:8px"><h3 style="margin:0">Últimos pedidos</h3><button class="btn btn-sm btn-ghost" id="allOrders">Ver todos</button></div>
-    ${ordersList(orders.slice(0, 8))}
+    <div class="stat"><span>Bolsas na loja</span><b>${active.length}</b></div>
+    <div class="stat"><span>Ocultas</span><b>${prods.length - active.length}</b></div>
+    <div class="stat"><span>Em destaque</span><b>${active.filter((p) => p.featured).length}</b></div>
+    <div class="stat"><span>Categorias</span><b>${categories.length}</b></div>
   </div>
   <div class="box"><h3>Atalhos</h3><div style="display:flex;gap:10px;flex-wrap:wrap">
-    <button class="btn btn-sm" id="newProd">+ Novo produto</button>
-    <button class="btn btn-sm btn-ghost" data-go="cupons">Criar cupom</button>
-    <button class="btn btn-sm btn-ghost" data-go="config">Chave Pix e frete</button>
-  </div>${!settings.pix_key ? '<p class="note" style="margin-bottom:0">⚠️ Cadastre a chave Pix em <b>Loja</b> para ela aparecer automaticamente para as clientes depois do pedido.</p>' : ''}<p class="muted" style="font-size:.85rem;margin:12px 0 0">${p.count || 0} produtos cadastrados.</p></div>`;
-  $('#allOrders').onclick = () => go('pedidos');
+    <button class="btn btn-sm" id="newProd">+ Nova bolsa</button>
+    <button class="btn btn-sm btn-ghost" data-go="produtos">Editar preços e fotos</button>
+    <button class="btn btn-sm btn-ghost" data-go="config">WhatsApp e textos</button>
+  </div>
+  <p class="note" style="margin-bottom:0">As clientes não compram pelo site: o botão “Quero esta” abre o WhatsApp ${esc(settings.whatsapp || '')} com a mensagem “Olá! Gostei da Bolsa…”. Pagamento e entrega são combinados na conversa.</p></div>
+  <div class="box"><h3>Vitrine</h3><div class="list-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">${active.slice(0, 8).map((p) => `<div class="lc" data-p="${p.id}"><img class="thumb" src="${esc(img(p.images?.[0]))}" alt=""><div><b>${esc(p.name)}</b><small>${money(p.price)}</small></div><span></span></div>`).join('')}</div></div>`;
   $('#newProd').onclick = () => editProduct(null);
   $$('[data-go]').forEach((b) => b.onclick = () => go(b.dataset.go));
-  bindOrderClicks(orders);
+  $$('[data-p]').forEach((r) => r.onclick = () => go('produtos'));
 }
 
 function ordersList(list) {
@@ -480,8 +465,7 @@ const FIELDS = [
     ['hero_title', 'Título da página inicial'], ['hero_subtitle', 'Texto da página inicial', 'textarea'], ['about', 'Texto “Sobre”', 'textarea'],
   ]],
   ['Contato', [['whatsapp', 'WhatsApp da loja (com DDI e DDD, só números. Ex.: 5537991985435)'], ['instagram', 'Instagram (sem @)'], ['email', 'E-mail de contato'], ['city', 'Cidade']]],
-  ['Pagamento', [['pix_key', 'Chave Pix'], ['pix_name', 'Nome do favorecido do Pix']]],
-  ['Entrega', [['shipping_flat', 'Frete fixo para envio (R$)', 'number'], ['free_shipping_over', 'Frete grátis acima de (R$) — 0 desativa', 'number'], ['pickup_address', 'Local de retirada'], ['production_note', 'Aviso de prazo de produção', 'textarea']]],
+  ['Entrega e prazos', [['production_note', 'Aviso de prazo de produção', 'textarea']]],
 ];
 
 async function vSettings() {
@@ -521,8 +505,6 @@ async function vAdmins() {
 function vMore() {
   $('#main').innerHTML = `<div class="top"><h1>Mais</h1></div>
   <div class="list-cards" style="display:grid">
-    <div class="lc" data-go="categorias" style="grid-template-columns:auto 1fr">${ico('folder')}<b>Categorias</b></div>
-    <div class="lc" data-go="cupons" style="grid-template-columns:auto 1fr">${ico('tag')}<b>Cupons de desconto</b></div>
     <div class="lc" data-go="admins" style="grid-template-columns:auto 1fr">${ico('user')}<b>Administradores</b></div>
     <a class="lc" href="${SITE}" target="_blank" rel="noopener" style="grid-template-columns:auto 1fr">${ico('bag')}<b>Ver a loja</b></a>
     <div class="lc" id="mOut" style="grid-template-columns:auto 1fr">${ico('x')}<b>Sair</b><small style="grid-column:2">${esc(session.user.email)}</small></div>
@@ -542,7 +524,6 @@ async function boot() {
   await Promise.all([loadCats(), sb.from('settings').select('data').eq('id', 1).maybeSingle().then((r) => { settings = r.data?.data || {}; })]);
   shell();
   go(TABS.some((t) => t.id === tab) ? tab : 'painel');
-  refreshPending();
 }
 
 sb.auth.onAuthStateChange((event) => {
